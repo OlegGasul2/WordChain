@@ -3,10 +3,10 @@ package com.sabre;
 import java.util.*;
 
 public class WordChainProcessor {
-    public Map<String, Set<Node>> possibilities = new HashMap<>();
+    private Map<String, Set<Node>> possibilities = new HashMap<>();
     private Map<String, Node> nodesMap = new HashMap<>();
 
-    private void addPosibility(String key, Node value) {
+    private void addPossibility(String key, Node value) {
         Set<Node> nodes = possibilities.get(key);
         if (nodes == null) {
             nodes = new HashSet<>();
@@ -29,7 +29,7 @@ public class WordChainProcessor {
             StringBuilder builder = new StringBuilder();
             builder.append(word.substring(0, i));
             builder.append(word.substring(i + 1, word.length()));
-            addPosibility(builder.toString(), node);
+            addPossibility(builder.toString(), node);
         }
 
         nodesMap.put(word, node);
@@ -62,17 +62,12 @@ public class WordChainProcessor {
 
     public List<Node> findRoute(String from, String to) {
         Node node = nodesMap.get(from);
-        return new Router(this).findRoute(node, to);
+        return new Router().findRoute(node, to);
     }
 }
 
 class Router {
-    private WordChainProcessor processor;
     private Set<Node> passed = new HashSet<>();
-
-    Router(WordChainProcessor processor) {
-        this.processor = processor;
-    }
 
     public List<Node> findRoute(Node node, String to) {
         passed.add(node);
@@ -91,6 +86,7 @@ class Router {
 
             List found = findRoute(child, to);
             if (found != null) {
+                result.add(node);
                 result.addAll(found);
                 return result;
             }
